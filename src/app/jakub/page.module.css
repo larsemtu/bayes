@@ -138,10 +138,44 @@
   pointer-events: none;
 }
 
-.terminalMessage {
+.congratsWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.6rem;
+  text-align: center;
+}
+
+.congratsTitle {
+  font-family: var(--font-cinzel), serif;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  font-size: clamp(2.4rem, 7vw, 4.8rem);
+  color: var(--accent-400);
+  text-align: center;
+  text-shadow: 0 0 16px rgba(225, 179, 107, 0.4);
+  max-width: 700px;
+  opacity: 0;
+  animation: messageIn 0.8s ease forwards;
+}
+
+.congratsButton {
+  height: 56px;
+  padding: 0 2.8rem;
+  font-size: 0.9rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #1b1206;
+  background: linear-gradient(135deg, #f2d39a, #c98744);
+  border: 1px solid rgba(225, 179, 107, 0.6);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.finalMessage {
   font-family: var(--font-cinzel), serif;
   text-transform: uppercase;
   letter-spacing: 0.2em;
+  font-size: clamp(1.1rem, 2.6vw, 1.6rem);
   color: var(--accent-400);
   text-align: center;
   text-shadow: 0 0 16px rgba(225, 179, 107, 0.4);

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import FormulaLayer from "@/components/FormulaLayer";
 import Scene from "@/components/Scene";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import styles from "./page.module.css";
 
@@ -51,14 +52,13 @@ const loadYouTubeApi = () => {
 
 export default function JakubPage() {
   const [password, setPassword] = useState("");
-  const [stage, setStage] = useState<"locked" | "playing" | "terminal">(
-    "locked"
-  );
+  const [stage, setStage] = useState<
+    "locked" | "playing" | "terminal" | "congrats" | "complete"
+  >("locked");
   const [showVideo, setShowVideo] = useState(false);
   const [fadeVideo, setFadeVideo] = useState(false);
   const [terminalBuffer, setTerminalBuffer] = useState<string[]>([]);
   const [terminalActive, setTerminalActive] = useState("");
-  const [showMessage, setShowMessage] = useState(false);
   const playerRef = useRef<any>(null);
   const isUnlocked = stage !== "locked";
   const videoId = "abX_CwnYNBc";
@@ -153,26 +153,20 @@ export default function JakubPage() {
     setFadeVideo(true);
     playerRef.current?.stopVideo?.();
     const hideTimer = window.setTimeout(() => setShowVideo(false), 800);
-    const messageTimer = window.setTimeout(() => setShowMessage(true), 5_000);
-    const redirectTimer = window.setTimeout(() => {
-      const opened = window.open(redirectUrl, "_blank", "noopener,noreferrer");
-      if (!opened) {
-        window.location.assign(redirectUrl);
-      }
-    }, 10_000);
+    const congratsTimer = window.setTimeout(() => {
+      setStage("congrats");
+    }, 15_000);
 
     return () => {
       window.clearTimeout(hideTimer);
-      window.clearTimeout(messageTimer);
-      window.clearTimeout(redirectTimer);
+      window.clearTimeout(congratsTimer);
     };
-  }, [redirectUrl, stage]);
+  }, [stage]);
 
   useEffect(() => {
     if (stage !== "terminal") {
       setTerminalBuffer([]);
       setTerminalActive("");
-      setShowMessage(false);
       return;
     }
 
@@ -214,6 +208,11 @@ export default function JakubPage() {
       }
     };
   }, [stage, terminalLines]);
+
+  const handleCollect = () => {
+    window.open(redirectUrl, "_blank", "noopener,noreferrer");
+    setStage("complete");
+  };
 
   return (
     <div className={styles.page}>
@@ -258,9 +257,22 @@ export default function JakubPage() {
             </div>
           ) : null}
 
-          {showMessage ? (
-            <p className={styles.terminalMessage}>
-              Sign up to receive 10 free clips to crossfit Oslo
+          {stage === "congrats" ? (
+            <div className={styles.congratsWrap}>
+              <h1 className={styles.congratsTitle}>Congratulations</h1>
+              <Button
+                size="lg"
+                className={styles.congratsButton}
+                onClick={handleCollect}
+              >
+                Collect my present
+              </Button>
+            </div>
+          ) : null}
+
+          {stage === "complete" ? (
+            <p className={styles.finalMessage}>
+              Sign up to retrieve your 10 free clips
             </p>
           ) : null}
         </div>
